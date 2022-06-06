@@ -1,10 +1,8 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>CCOVID-19 rates in the US during 2020</title>
+    <title>Parking Spots in Seattle</title>
     <meta name="robots" content="noindex, nofollow" />
     <meta
       name="viewport"
@@ -15,6 +13,62 @@
       href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css"
       rel="stylesheet"
     />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+
+        #menu {
+            background: #fff;
+            position: absolute;
+            z-index: 1;
+            top: 10px;
+            right: 10px;
+            border-radius: 3px;
+            width: 120px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #menu a {
+            font-size: 13px;
+            color: #404040;
+            display: block;
+            margin: 0;
+            padding: 0;
+            padding: 10px;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        #menu a:last-child {
+            border: none;
+        }
+
+        #menu a:hover {
+            background-color: #f8f8f8;
+            color: #404040;
+        }
+
+        #menu a.active {
+            background-color: #3887be;
+            color: #ffffff;
+        }
+
+        #menu a.active:hover {
+            background: #3074a4;
+        }
+    </style>
     </head>
     <body>
         <div id="map"></div>
@@ -25,38 +79,133 @@
     
         <!-- <script src="js/main1.js"></script> -->
         <script> 
-        mapboxgl.accessToken = 'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
-    
-          //create map
-          var map = new mapboxgl.Map({
-            container: 'map', // container id
-            
-             // map style URL from Mapbox Studio
-          });
-    
-          // wait for map to load before adjusting it
-          map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
-
-            map.addSource('tiles', {
-                'type': 'raster',
-                'tiles': [
-                    'assets/uw/{z}/{x}/{y}.png'
-                ],
-                'tileSize': 256,
-                'attribution': 'Map tiles designed by Bo Zhao</a>'
-            });
-
-            map.addLayer({
-                'id': 'uw',
-                'type': 'raster',
-                'layout': {
-                    'visibility': 'none'
-                },
-                'source': 'uw-tiles'
+            mapboxgl.accessToken =
+            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+        
+            let map = new mapboxgl.Map({
+            container: 'map', 
+            //projection: 'EPSG:4326'
+            style: 'mapbox://styles/mapbox/streets-v10',
+            zoom: 10, 
+   
+            center: [-122.3168148, 47.6377886]
             });
 
 
+
+            map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
+
+                map.addSource('mapbox-tiles', {
+                    'type': 'raster',
+                    'tiles': [
+                        'assets/streets_mapbox/{z}/{x}/{y}.png' 
+                    ],
+                    'tileSize': 256,
+                    'attribution': 'These are the tiles for the mapbox basemap "streets"</a>'
+                });
+                map.addSource('parking-tiles', { 
+                    'type': 'raster',
+                    'tiles': [
+                        'assets/parkinglots/{z}/{x}/{y}.png' 
+                    ],
+                    'tileSize': 256,
+                    'attribution': 'These are the locations of public parking spots in Seattle/a>'
+                });
+
+                map.addSource('pakring-and-mapbox-tiles', {
+                    'type': 'raster',
+                    'tiles': [
+                        'assets/parking_on_streets_mapbox/{z}/{x}/{y}.png'
+                    ],
+                    'tileSize': 256,
+                    'attribution': 'These are the parking spots with the streets basemap'
+                });
+
+                map.addLayer({ //
+                    'id': 'mapbox-tiles',
+                    'type': 'raster',
+                    
+                    'layout': {
+                        'visibility': 'none'
+                    },
+                    'source': 'mapbox-tiles' 
+                });
+
+                map.addLayer({
+                    'id': 'parking-tiles',
+                    'type': 'raster',
+                    'layout': {
+                        'visibility': 'none'
+                    },
+                    'source': 'parking-tiles'
+                });
+
+                map.addLayer({ // 
+                    'id': 'parking-and-mapbox-tiles', // 
+                    'type': 'raster',
+                    'layout': {
+                        'visibility': 'none'
+                    },
+                    'source': 'parking-and-mapbox-tiles-tiles' //
+                });
+
             });
+
+
+            // After the last frame rendered before the map enters an "idle" state.
+            map.on('idle', () => {
+            // If these two layers were not added to the map, abort
+            if (!map.getLayer('mapbox-tiles') || !map.getLayer('parking-tiles') || !map.getLayer('parking-and-mapbox-tiles')) {
+                return;
+            }
+
+            // Enumerate ids of the layers.
+            const toggleableLayerIds = ['mapbox-tiles', 'parking-tiles', 'parking-and-mapbox-tiles'];
+
+            // Set up the corresponding toggle button for each layer.
+            for (const id of toggleableLayerIds) {
+                // Skip layers that already have a button set up.
+                if (document.getElementById(id)) {
+                    continue;
+                }
+
+                // Create a link.
+                const link = document.createElement('a');
+                link.id = id;
+                link.href = '#';
+                link.textContent = id;
+                link.className = 'inactive';
+
+                // Show or hide layer when the toggle is clicked.
+                link.onclick = function (e) {
+                    const clickedLayer = this.textContent;
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const visibility = map.getLayoutProperty(
+                        clickedLayer,
+                        'visibility'
+                    );
+
+                    // Toggle layer visibility by changing the layout object's visibility property.
+                    if (visibility === 'visible') {
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        this.className = '';
+                    } else {
+                        this.className = 'active';
+                        map.setLayoutProperty(
+                            clickedLayer,
+                            'visibility',
+                            'visible'
+                        );
+                    }
+                };
+
+                const layers = document.getElementById('menu');
+                layers.appendChild(link);
+            }
+            });
+
         </script>
     </body>
 </html>
