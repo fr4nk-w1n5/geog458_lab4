@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CCOVID-19 rates in the US during 2020</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    </head>
+    <body>
+        <div id="map"></div>
+        <div class="map-overlay" id="features">
+          <h2>Parking in Seattle</h2>
+        </div>
+        <div class="map-overlay" id="legend"></div>
+    
+        <!-- <script src="js/main1.js"></script> -->
+        <script> 
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+    
+          //create map
+          var map = new mapboxgl.Map({
+            container: 'map', // container id
+            
+             // map style URL from Mapbox Studio
+          });
+    
+          // wait for map to load before adjusting it
+          map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
+
+            map.addSource('tiles', {
+                'type': 'raster',
+                'tiles': [
+                    'assets/uw/{z}/{x}/{y}.png'
+                ],
+                'tileSize': 256,
+                'attribution': 'Map tiles designed by Bo Zhao</a>'
+            });
+
+            map.addLayer({
+                'id': 'uw',
+                'type': 'raster',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'source': 'uw-tiles'
+            });
+
+
+            });
+        </script>
+    </body>
+</html>
+
