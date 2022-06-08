@@ -10,19 +10,19 @@ Sidenote: I ran into some issues when working on this lab so the screenshots sho
 
 The first tile set is the streets basemap from mapbox centered around Seattle. Zoom levels for this set are 1 to 11.
 
-[mapbox tileset](assets/img/mapbox)
+[mapbox tileset](assets/img/mapbox.png)
 
 The second tile set is the parking garages in and near Seattle. Zoom levels for this set are 1 to 11.
 
-[seattle parking](assets/img/parking)
+[seattle parking](assets/img/parking.png)
 
 The third tile set is the parking garages and the streets basemap combined.  Zoom levels for this set are 1 to 11.
 
-[parking and streets](assets/img/parkingstreets)
+[parking and streets](assets/img/parkingstreets.png)
 
 the final tileset is the monochrome basemap from mapbox that I customized to have a dark blue color to it.  Zoom levels for this set are 1 to 11.
 
-[monochrome blue](assets/img/monochromeblue)
+[monochrome blue](assets/img/monochromeblue.png)
 
 ## Sources
 
